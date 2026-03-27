@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Daily Scripture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Cinzel:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --navy:       #0d1b2a;
+      --navy-mid:   #112236;
+      --navy-light: #1a3150;
+      --border:     #1e3d5c;
+      --sepia:      #d4b896;
+      --sepia-dim:  #a8916f;
+      --sepia-faint:#7a6a52;
+      --gold:       #c9a84c;
+      --gold-dim:   #9e7f38;
+      --white-soft: #e8ddd0;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--navy);
+      color: var(--sepia);
+      font-family: 'EB Garamond', Georgia, serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100dvh;
+      padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+    }
+
+    /* ── Phone shell ─────────────────────────────── */
+    .app {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: var(--navy);
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* subtle texture overlay */
+    .app::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(13,27,42,0.8) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ──────────────────────────────────── */
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 36px 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .app-title {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.85;
+    }
+
+    .date-label {
+      margin-top: 6px;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--sepia-faint);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Ornament ────────────────────────────────── */
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 18px 0 0;
+    }
+
+    .ornament-line {
+      flex: 1;
+      max-width: 80px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-dim));
+    }
+
+    .ornament-line.right {
+      background: linear-gradient(to left, transparent, var(--gold-dim));
+    }
+
+    .ornament-diamond {
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      opacity: 0.7;
+    }
+
+    /* ── Main scripture card ─────────────────────── */
+    main {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 24px 20px;
+    }
+
+    .card {
+      width: 100%;
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 28px 32px;
+      position: relative;
+      box-shadow:
+        0 0 0 1px rgba(201,168,76,0.06),
+        0 8px 40px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(201,168,76,0.08);
+    }
+
+    /* corner accents */
+    .card::before,
+    .card::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: var(--gold-dim);
+      border-style: solid;
+      opacity: 0.5;
+    }
+
+    .card::before {
+      top: 10px;
+      left: 10px;
+      border-width: 1px 0 0 1px;
+      border-radius: 4px 0 0 0;
+    }
+
+    .card::after {
+      bottom: 10px;
+      right: 10px;
+      border-width: 0 1px 1px 0;
+      border-radius: 0 0 4px 0;
+    }
+
+    .theme-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .scripture-text {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(18px, 4.8vw, 21px);
+      line-height: 1.85;
+      color: var(--sepia);
+      text-align: center;
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+    }
+
+    .quote-mark {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 72px;
+      line-height: 0;
+      color: var(--gold);
+      opacity: 0.18;
+      position: absolute;
+      top: 46px;
+      left: 18px;
+      font-style: normal;
+      pointer-events: none;
+    }
+
+    .reference {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .reference-text {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      opacity: 0.8;
+      text-transform: uppercase;
+    }
+
+    .reference-full {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--sepia-faint);
+      font-style: italic;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Navigation ──────────────────────────────── */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .nav-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--sepia-dim);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-btn:active {
+      background: var(--navy-light);
+      border-color: var(--gold-dim);
+      color: var(--gold);
+    }
+
+    .nav-counter {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--sepia-faint);
+      min-width: 60px;
+      text-align: center;
+    }
+
+    /* ── Today button ────────────────────────────── */
+    .today-btn {
+      margin-top: 16px;
+      background: none;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .today-btn:active {
+      opacity: 1;
+      background: rgba(201,168,76,0.08);
+    }
+
+    .today-btn.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 16px 24px 28px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-text {
+      font-size: 11px;
+      color: var(--sepia-faint);
+      opacity: 0.5;
+      letter-spacing: 0.06em;
+      font-style: italic;
+    }
+
+    /* ── Fade transition ─────────────────────────── */
+    .card {
+      transition: opacity 0.3s ease;
+    }
+
+    .card.fade {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="app-title">Daily Scripture</div>
+    <div class="date-label" id="dateLabel"></div>
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line right"></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="card" id="card">
+      <span class="quote-mark">&ldquo;</span>
+      <div class="theme-tag" id="themeTag"></div>
+      <p class="scripture-text" id="scriptureText"></p>
+      <div class="reference">
+        <div class="reference-text" id="referenceShort"></div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" aria-label="Previous scripture">&#8592;</button>
+      <div class="nav-counter" id="navCounter"></div>
+      <button class="nav-btn" id="nextBtn" aria-label="Next scripture">&#8594;</button>
+    </div>
+
+    <button class="today-btn hidden" id="todayBtn">Today&rsquo;s Scripture</button>
+  </main>
+
+  <footer>
+    <p class="footer-text">Latter-day Saint Scriptures</p>
+  </footer>
+
+</div>
+
+<script>
+// ── Scripture Library ─────────────────────────────────────────────────────────
+const scriptures = [
+  // ── Old Testament ────────────────────────────────────────────────────────────
+  {
+    text: "Be strong and courageous. Do not be afraid or terrified because of them, for the Lord your God goes with you; he will never leave you nor forsake you.",
+    book: "Deuteronomy",
+    chapter: 31,
+    verse: 6,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "And the Lord, he it is that doth go before thee; he will be with thee, he will not fail thee, neither forsake thee: fear not, neither be dismayed.",
+    book: "Deuteronomy",
+    chapter: 31,
+    verse: 8,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the Lord thy God is with thee whithersoever thou goest.",
+    book: "Joshua",
+    chapter: 1,
+    verse: 9,
+    theme: "Be of Good Courage"
+  },
+  {
+    text: "Trust in the Lord with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
+    book: "Proverbs",
+    chapter: 3,
+    verse: "5–6",
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",
+    book: "Psalms",
+    chapter: 23,
+    verse: 4,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "The Lord is my light and my salvation; whom shall I fear? the Lord is the strength of my life; of whom shall I be afraid?",
+    book: "Psalms",
+    chapter: 27,
+    verse: 1,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "I sought the Lord, and he heard me, and delivered me from all my fears.",
+    book: "Psalms",
+    chapter: 34,
+    verse: 4,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "God is our refuge and strength, a very present help in trouble.",
+    book: "Psalms",
+    chapter: 46,
+    verse: 1,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "He shall cover thee with his feathers, and under his wings shalt thou trust: his truth shall be thy shield and buckler.",
+    book: "Psalms",
+    chapter: 91,
+    verse: 4,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",
+    book: "Isaiah",
+    chapter: 26,
+    verse: 3,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "But they that wait upon the Lord shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.",
+    book: "Isaiah",
+    chapter: 40,
+    verse: 31,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",
+    book: "Isaiah",
+    chapter: 41,
+    verse: 10,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "When thou passest through the waters, I will be with thee; and through the rivers, they shall not overflow thee: when thou walkest through the fire, thou shalt not be burned; neither shall the flame kindle upon thee.",
+    book: "Isaiah",
+    chapter: 43,
+    verse: 2,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "Fear not: for I am with thee: I will bring thy seed from the east, and gather thee from the west.",
+    book: "Isaiah",
+    chapter: 43,
+    verse: 5,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "The Lord thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.",
+    book: "Zephaniah",
+    chapter: 3,
+    verse: 17,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "The Lord is good, a strong hold in the day of trouble; and he knoweth them that trust in him.",
+    book: "Nahum",
+    chapter: 1,
+    verse: 7,
+    theme: "Trust in the Lord"
+  },
+  // ── New Testament ────────────────────────────────────────────────────────────
+  {
+    text: "Come unto me, all ye that labour and are heavy laden, and I will give you rest. Take my yoke upon you, and learn of me; for I am meek and lowly in heart: and ye shall find rest unto your souls. For my yoke is easy, and my burden is light.",
+    book: "Matthew",
+    chapter: 11,
+    verse: "28–30",
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",
+    book: "John",
+    chapter: 14,
+    verse: 27,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world.",
+    book: "John",
+    chapter: 16,
+    verse: 33,
+    theme: "Be of Good Courage"
+  },
+  {
+    text: "What shall we then say to these things? If God be for us, who can be against us?",
+    book: "Romans",
+    chapter: 8,
+    verse: 31,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come, nor height, nor depth, nor any other creature, shall be able to separate us from the love of God, which is in Christ Jesus our Lord.",
+    book: "Romans",
+    chapter: 8,
+    verse: "38–39",
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",
+    book: "Philippians",
+    chapter: 4,
+    verse: 7,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "I can do all things through Christ which strengtheneth me.",
+    book: "Philippians",
+    chapter: 4,
+    verse: 13,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",
+    book: "2 Timothy",
+    chapter: 1,
+    verse: 7,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "So that we may boldly say, The Lord is my helper, and I will not fear what man shall do unto me.",
+    book: "Hebrews",
+    chapter: 13,
+    verse: 6,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "Casting all your care upon him; for he careth for you.",
+    book: "1 Peter",
+    chapter: 5,
+    verse: 7,
+    theme: "Trust in the Lord"
+  },
+  // ── Book of Mormon ───────────────────────────────────────────────────────────
+  {
+    text: "I will go and do the things which the Lord hath commanded, for I know that the Lord giveth no commandments unto the children of men, save he shall prepare a way for them that they may accomplish the thing which he commandeth them.",
+    book: "1 Nephi",
+    chapter: 3,
+    verse: 7,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Nevertheless, I know in whom I have trusted. My God hath been my support; he hath led me through mine afflictions in the wilderness; and he hath preserved me upon the waters of the great deep.",
+    book: "2 Nephi",
+    chapter: 4,
+    verse: "19–20",
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "O Lord, I have trusted in thee, and I will trust in thee forever. I will not put my trust in the arm of flesh; for I know that cursed is he that putteth his trust in the arm of flesh. Yea, cursed is he that putteth his trust in man or maketh flesh his arm.",
+    book: "2 Nephi",
+    chapter: 4,
+    verse: 34,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Wherefore, ye must press forward with a steadfastness in Christ, having a perfect brightness of hope, and a love of God and of all men. Wherefore, if ye shall press forward, feasting upon the word of Christ, and endure to the end, behold, thus saith the Father: Ye shall have eternal life.",
+    book: "2 Nephi",
+    chapter: 31,
+    verse: 20,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "He doeth not anything save it be for the benefit of the world; for he loveth the world, even that he layeth down his own life that he may draw all men unto him. Wherefore, he commandeth none that they shall not partake of his salvation.",
+    book: "2 Nephi",
+    chapter: 26,
+    verse: 24,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Believe in God; believe that he is, and that he created all things, both in heaven and in earth; believe that he has all wisdom, and all power, both in heaven and in earth; believe that man doth not comprehend all the things which the Lord can comprehend.",
+    book: "Mosiah",
+    chapter: 4,
+    verse: 9,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Yea, I know that I am nothing; as to my strength I am weak; therefore I will not boast of myself, but I will boast of my God, for in his strength I can do all things; yea, behold, many mighty miracles we have wrought in this land, for which we will praise his name forever.",
+    book: "Alma",
+    chapter: 26,
+    verse: 12,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "I do know that whosoever shall put their trust in God shall be supported in their trials, and their troubles, and their afflictions, and shall be lifted up at the last day.",
+    book: "Alma",
+    chapter: 36,
+    verse: 3,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Counsel with the Lord in all thy doings, and he will direct thee for good; yea, when thou liest down at night lie down unto the Lord, that he may watch over you in your sleep; and when thou risest in the morning let thy heart be full of thanks unto God; and if ye do these things, ye shall be lifted up at the last day.",
+    book: "Alma",
+    chapter: 37,
+    verse: 37,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Faith is things which are hoped for and not seen; wherefore, dispute not because ye see not, for ye receive no witness until after the trial of your faith.",
+    book: "Ether",
+    chapter: 12,
+    verse: 6,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "And if men come unto me I will show unto them their weakness. I give unto men weakness that they may be humble; and my grace is sufficient for all men that humble themselves before me; for if they humble themselves before me, and have faith in me, then will I make weak things become strong unto them.",
+    book: "Ether",
+    chapter: 12,
+    verse: 27,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "And Christ hath said: If ye will have faith in me ye shall have power to do whatsoever thing is expedient in me.",
+    book: "Moroni",
+    chapter: 7,
+    verse: 33,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "But charity is the pure love of Christ, and it endureth forever; and whoso is found possessed of it at the last day, it shall be well with them.",
+    book: "Moroni",
+    chapter: 7,
+    verse: 47,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Yea, come unto Christ, and be perfected in him, and deny yourselves of all ungodliness; and if ye shall deny yourselves of all ungodliness, and love God with all your might, mind and strength, then is his grace sufficient for you, that by his grace ye may be perfect in Christ; and if by the grace of God ye are perfect in Christ, ye can in nowise deny the power of God.",
+    book: "Moroni",
+    chapter: 10,
+    verse: 32,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Remember, remember that it is upon the rock of our Redeemer, who is Christ, the Son of God, that ye must build your foundation; that when the devil shall send forth his mighty winds, yea, his shafts in the whirlwind, yea, when all his hail and his mighty storm shall beat upon you, it shall have no power over you to drag you down to the gulf of misery and endless wo, because of the rock upon which ye are built, which is a sure foundation, a foundation whereon if men build they cannot fall.",
+    book: "Helaman",
+    chapter: 5,
+    verse: 12,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Have ye any that are sick among you? Bring them hither. Have ye any that are lame, or blind, or halt, or maimed, or leprous, or that are withered, or that are deaf, or that are afflicted in any manner? Bring them hither and I will heal them, for I have compassion upon you; my bowels are filled with mercy.",
+    book: "3 Nephi",
+    chapter: 17,
+    verse: 7,
+    theme: "Faith in Jesus Christ"
+  },
+  // ── Doctrine & Covenants ─────────────────────────────────────────────────────
+  {
+    text: "Look unto me in every thought; doubt not, fear not.",
+    book: "Doctrine & Covenants",
+    chapter: 6,
+    verse: 36,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "Wherefore, be of good cheer, and do not fear, for I the Lord am with you, and will stand by you; and ye shall bear record of me, even Jesus Christ, that I am the Son of the living God, that I was, that I am, and that I am to come.",
+    book: "Doctrine & Covenants",
+    chapter: 68,
+    verse: 6,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "And ye cannot bear all things now; nevertheless, be of good cheer, for I will lead you along. The kingdom is yours and the blessings thereof are yours, and the riches of eternity are yours.",
+    book: "Doctrine & Covenants",
+    chapter: 78,
+    verse: 18,
+    theme: "Be of Good Courage"
+  },
+  {
+    text: "Whoso receiveth you, there I will be also, for I will go before your face. I will be on your right hand and on your left, and my Spirit shall be in your hearts, and mine angels round about you, to bear you up.",
+    book: "Doctrine & Covenants",
+    chapter: 84,
+    verse: 88,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Verily I say unto you my friends, fear not, let your hearts be comforted; yea, rejoice evermore, and in everything give thanks.",
+    book: "Doctrine & Covenants",
+    chapter: 98,
+    verse: 1,
+    theme: "Do Not Fear"
+  },
+  {
+    text: "My son, peace be unto thy soul; thine adversity and thine afflictions shall be but a small moment; and then, if thou endure it well, God shall exalt thee on high; thou shalt triumph over all thy foes.",
+    book: "Doctrine & Covenants",
+    chapter: 121,
+    verse: "7–8",
+    theme: "Be of Good Courage"
+  },
+  // ── Pearl of Great Price ──────────────────────────────────────────────────────
+  {
+    text: "And, behold, thou art my son; wherefore look, and I will show thee the workmanship of mine hands; but not all, for my works are without end, and also my words, for they never cease.",
+    book: "Moses",
+    chapter: 1,
+    verse: 4,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Behold my Spirit is upon you, wherefore all thy words will I justify; and the mountains shall flee before you, and the rivers shall turn from their course; thou shalt abide in me, and I in you; therefore walk with me.",
+    book: "Moses",
+    chapter: 6,
+    verse: 34,
+    theme: "Be of Good Courage"
+  }
+];
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function getDailyIndex() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = now - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const dayOfYear = Math.floor(diff / oneDay);
+  return dayOfYear % scriptures.length;
+}
+
+function formatDate(date) {
+  return date.toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+}
+
+function formatRef(s) {
+  return `${s.book} ${s.chapter}:${s.verse}`;
+}
+
+// ── State & Render ────────────────────────────────────────────────────────────
+const todayIndex = getDailyIndex();
+let currentIndex = todayIndex;
+
+const card          = document.getElementById('card');
+const themeTag      = document.getElementById('themeTag');
+const scriptureText = document.getElementById('scriptureText');
+const referenceShort= document.getElementById('referenceShort');
+const referenceFull = document.getElementById('referenceFull');
+const navCounter    = document.getElementById('navCounter');
+const todayBtn      = document.getElementById('todayBtn');
+const dateLabel     = document.getElementById('dateLabel');
+
+dateLabel.textContent = formatDate(new Date());
+
+function render(index, animate = false) {
+  const s = scriptures[index];
+
+  const doRender = () => {
+    themeTag.textContent      = s.theme;
+    scriptureText.textContent = s.text;
+    referenceShort.textContent= formatRef(s);
+    navCounter.textContent    = `${index + 1} / ${scriptures.length}`;
+
+    if (index === todayIndex) {
+      todayBtn.classList.add('hidden');
+    } else {
+      todayBtn.classList.remove('hidden');
+    }
+
+    if (animate) {
+      card.classList.remove('fade');
+    }
+  };
+
+  if (animate) {
+    card.classList.add('fade');
+    setTimeout(doRender, 300);
+  } else {
+    doRender();
+  }
+}
+
+render(currentIndex);
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  currentIndex = (currentIndex - 1 + scriptures.length) % scriptures.length;
+  render(currentIndex, true);
+});
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+  currentIndex = (currentIndex + 1) % scriptures.length;
+  render(currentIndex, true);
+});
+
+todayBtn.addEventListener('click', () => {
+  currentIndex = todayIndex;
+  render(currentIndex, true);
+});
+</script>
+</body>
+</html>
