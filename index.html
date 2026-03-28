@@ -88,20 +88,11 @@
 
     .app-title {
       font-family: 'Cinzel', serif;
-      font-size: 13px;
+      font-size: 17px;
       font-weight: 500;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
+      letter-spacing: 0.12em;
       color: var(--gold);
-      opacity: 0.85;
-    }
-
-    .date-label {
-      margin-top: 6px;
-      font-size: 13px;
-      font-style: italic;
-      color: var(--sepia-faint);
-      letter-spacing: 0.04em;
+      opacity: 0.9;
     }
 
     /* ── Ornament ────────────────────────────────── */
@@ -291,12 +282,26 @@
       border-top: 1px solid var(--border);
     }
 
-    .footer-text {
+    .feedback-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--sepia-dim);
+      font-family: 'Cinzel', serif;
       font-size: 11px;
-      color: var(--sepia-faint);
-      opacity: 0.5;
-      letter-spacing: 0.06em;
-      font-style: italic;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 10px 28px;
+      border-radius: 999px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: border-color 0.2s, color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .feedback-btn:active {
+      border-color: var(--gold-dim);
+      color: var(--gold);
     }
 
     /* ── Card flip transition ────────────────────── */
@@ -322,8 +327,7 @@
 <div class="app">
 
   <header>
-    <div class="app-title">Daily Scripture</div>
-    <div class="date-label" id="dateLabel"></div>
+    <div class="app-title">Encouraging Scriptures</div>
     <div class="ornament">
       <div class="ornament-line"></div>
       <div class="ornament-diamond"></div>
@@ -352,7 +356,7 @@
   </main>
 
   <footer>
-    <p class="footer-text">Latter-day Saint Scriptures</p>
+    <a class="feedback-btn" href="sms:+18016431733">Feedback</a>
   </footer>
 
 </div>
@@ -788,9 +792,6 @@ const themeTag      = document.getElementById('themeTag');
 const scriptureText = document.getElementById('scriptureText');
 const referenceShort= document.getElementById('referenceShort');
 const navCounter    = document.getElementById('navCounter');
-const dateLabel     = document.getElementById('dateLabel');
-
-dateLabel.textContent = formatDate(new Date());
 
 function updateContent(index) {
   const s = scriptures[index];
