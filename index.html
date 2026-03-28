@@ -295,14 +295,23 @@
       font-style: italic;
     }
 
-    /* ── Fade transition ─────────────────────────── */
-    .card {
-      transition: opacity 0.3s ease;
+    /* ── Card flip transition ────────────────────── */
+    .card-scene {
+      width: 100%;
+      perspective: 1000px;
     }
 
-    .card.fade {
-      opacity: 0;
+    .card {
+      transform-origin: center center;
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+      backface-visibility: hidden;
     }
+
+    .card.flip-out-left  { transform: rotateY(-90deg) scale(0.95); }
+    .card.flip-out-right { transform: rotateY(90deg)  scale(0.95); }
+    .card.flip-in-left   { transform: rotateY(90deg)  scale(0.95); transition: none; }
+    .card.flip-in-right  { transform: rotateY(-90deg) scale(0.95); transition: none; }
   </style>
 </head>
 <body>
@@ -319,6 +328,7 @@
   </header>
 
   <main>
+    <div class="card-scene">
     <div class="card" id="card">
       <span class="quote-mark">&ldquo;</span>
       <div class="theme-tag" id="themeTag"></div>
@@ -327,6 +337,7 @@
         <div class="reference-text" id="referenceShort"></div>
       </div>
     </div>
+    </div><!-- /.card-scene -->
 
     <div class="nav">
       <button class="nav-btn" id="prevBtn" aria-label="Previous scripture">&#8592;</button>
@@ -742,36 +753,56 @@ const dateLabel     = document.getElementById('dateLabel');
 
 dateLabel.textContent = formatDate(new Date());
 
-function render(index, animate = false) {
+function updateContent(index) {
   const s = scriptures[index];
+  themeTag.textContent       = s.theme;
+  scriptureText.textContent  = s.text;
+  referenceShort.textContent = formatRef(s);
+  navCounter.textContent     = `${index + 1} / ${scriptures.length}`;
+}
 
-  const doRender = () => {
-    themeTag.textContent       = s.theme;
-    scriptureText.textContent  = s.text;
-    referenceShort.textContent = formatRef(s);
-    navCounter.textContent     = `${index + 1} / ${scriptures.length}`;
-    if (animate) card.classList.remove('fade');
-  };
-
-  if (animate) {
-    card.classList.add('fade');
-    setTimeout(doRender, 300);
-  } else {
-    doRender();
-  }
+function render(index) {
+  updateContent(index);
 }
 
 render(currentIndex);
 
-function goNext() {
-  currentIndex = (currentIndex + 1) % scriptures.length;
-  render(currentIndex, true);
+let flipping = false;
+
+function flipTo(direction) {
+  if (flipping) return;
+  flipping = true;
+
+  const outClass = direction === 'next' ? 'flip-out-left' : 'flip-out-right';
+  const inClass  = direction === 'next' ? 'flip-in-left'  : 'flip-in-right';
+
+  // 1. Rotate card out (edge-on)
+  card.classList.add(outClass);
+
+  setTimeout(() => {
+    // 2. Snap to opposite edge with no transition, update content
+    card.classList.remove(outClass);
+    card.classList.add(inClass);
+
+    if (direction === 'next') {
+      currentIndex = (currentIndex + 1) % scriptures.length;
+    } else {
+      currentIndex = (currentIndex - 1 + scriptures.length) % scriptures.length;
+    }
+    updateContent(currentIndex);
+
+    // 3. Force reflow so the browser registers the no-transition position
+    card.getBoundingClientRect();
+
+    // 4. Remove no-transition class and snap back to flat (animate in)
+    card.classList.remove(inClass);
+
+    setTimeout(() => { flipping = false; }, 400);
+  }, 380);
 }
 
-function goPrev() {
-  currentIndex = (currentIndex - 1 + scriptures.length) % scriptures.length;
-  render(currentIndex, true);
-}
+function goNext() { flipTo('next'); }
+function goPrev() { flipTo('prev'); }
 
 document.getElementById('prevBtn').addEventListener('click', goPrev);
 document.getElementById('nextBtn').addEventListener('click', goNext);
