@@ -86,13 +86,30 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .app-title {
+    .category-select {
       font-family: 'Cinzel', serif;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 500;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       color: var(--gold);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--gold-dim);
+      padding: 4px 28px 4px 6px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
       opacity: 0.9;
+      outline: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a84c' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 6px center;
+    }
+
+    .category-select option {
+      background: #0d1b2a;
+      color: var(--sepia);
+      letter-spacing: 0.04em;
     }
 
     /* ── Ornament ────────────────────────────────── */
@@ -327,7 +344,11 @@
 <div class="app">
 
   <header>
-    <div class="app-title">Encouraging Scriptures</div>
+    <select class="category-select" id="categorySelect">
+      <option value="scriptures">Encouraging Scriptures</option>
+      <option value="prophets">Encouraging Prophets</option>
+      <option value="christ">Jesus Christ</option>
+    </select>
     <div class="ornament">
       <div class="ornament-line"></div>
       <div class="ornament-diamond"></div>
@@ -362,9 +383,11 @@
 </div>
 
 <script>
-// ── Scripture Library ─────────────────────────────────────────────────────────
-const scriptures = [
-  // ── Old Testament ────────────────────────────────────────────────────────────
+// ── Libraries ─────────────────────────────────────────────────────────────────
+const libraries = {};
+
+libraries.scriptures = [
+  // ── Old Testament ─────────────────────────────────────────────────────────────
   {
     text: "Be strong and courageous. Do not be afraid or terrified because of them, for the Lord your God goes with you; he will never leave you nor forsake you.",
     book: "Deuteronomy",
@@ -387,18 +410,11 @@ const scriptures = [
     theme: "Be of Good Courage"
   },
   {
-    text: "Trust in the Lord with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
-    book: "Proverbs",
-    chapter: 3,
-    verse: "5–6",
-    theme: "Trust in the Lord"
-  },
-  {
-    text: "Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",
-    book: "Psalms",
-    chapter: 23,
-    verse: 4,
-    theme: "Do Not Fear"
+    text: "...Be strong and of good courage, and do it: fear not, nor be dismayed: for the Lord God, even my God, will be with thee; he will not fail thee, nor forsake thee, until thou hast finished all the work...",
+    book: "1 Chronicles",
+    chapter: 28,
+    verse: 20,
+    theme: "Be of Good Courage"
   },
   {
     text: "The Lord is my light and my salvation; whom shall I fear? the Lord is the strength of my life; of whom shall I be afraid?",
@@ -408,17 +424,38 @@ const scriptures = [
     theme: "Do Not Fear"
   },
   {
-    text: "Trust in the Lord, and do good; so shalt thou dwell in the land, and verily thou shalt be fed. Delight thyself also in the Lord; and he shall give thee the desires of thine heart. Commit thy way unto the Lord; trust also in him; and he shall bring it to pass.",
+    text: "Wait on the Lord: be of good courage, and he shall strengthen thine heart: wait, I say, on the Lord.",
     book: "Psalms",
-    chapter: 37,
-    verse: "3–5",
+    chapter: 27,
+    verse: 14,
+    theme: "Be of Good Courage"
+  },
+  {
+    text: "The LORD is my strength and my shield; my heart trusted in him, and I am helped: therefore my heart greatly rejoiceth; and with my song will I praise him.",
+    book: "Psalms",
+    chapter: 28,
+    verse: 7,
     theme: "Trust in the Lord"
+  },
+  {
+    text: "Be of good courage, and he shall strengthen your heart, all ye that hope in the Lord.",
+    book: "Psalms",
+    chapter: 31,
+    verse: 24,
+    theme: "Be of Good Courage"
   },
   {
     text: "I sought the Lord, and he heard me, and delivered me from all my fears.",
     book: "Psalms",
     chapter: 34,
     verse: 4,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Trust in the Lord, and do good; so shalt thou dwell in the land, and verily thou shalt be fed. Delight thyself also in the Lord; and he shall give thee the desires of thine heart. Commit thy way unto the Lord; trust also in him; and he shall bring it to pass.",
+    book: "Psalms",
+    chapter: 37,
+    verse: "3–5",
     theme: "Trust in the Lord"
   },
   {
@@ -429,13 +466,6 @@ const scriptures = [
     theme: "Trust in the Lord"
   },
   {
-    text: "This is the day which the Lord hath made; we will rejoice and be glad in it.",
-    book: "Psalms",
-    chapter: 118,
-    verse: 24,
-    theme: "Trust in the Lord"
-  },
-  {
     text: "He shall cover thee with his feathers, and under his wings shalt thou trust: his truth shall be thy shield and buckler.",
     book: "Psalms",
     chapter: 91,
@@ -443,10 +473,17 @@ const scriptures = [
     theme: "Trust in the Lord"
   },
   {
-    text: "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",
-    book: "Isaiah",
-    chapter: 26,
-    verse: 3,
+    text: "This is the day which the Lord hath made; we will rejoice and be glad in it.",
+    book: "Psalms",
+    chapter: 118,
+    verse: 24,
+    theme: "Trust in the Lord"
+  },
+  {
+    text: "Trust in the Lord with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
+    book: "Proverbs",
+    chapter: 3,
+    verse: "5–6",
     theme: "Trust in the Lord"
   },
   {
@@ -471,18 +508,18 @@ const scriptures = [
     theme: "Do Not Fear"
   },
   {
-    text: "When thou passest through the waters, I will be with thee; and through the rivers, they shall not overflow thee: when thou walkest through the fire, thou shalt not be burned; neither shall the flame kindle upon thee.",
-    book: "Isaiah",
-    chapter: 43,
-    verse: 2,
-    theme: "Do Not Fear"
-  },
-  {
-    text: "Fear not: for I am with thee: I will bring thy seed from the east, and gather thee from the west.",
+    text: "Fear not: for I am with thee.",
     book: "Isaiah",
     chapter: 43,
     verse: 5,
     theme: "Do Not Fear"
+  },
+  {
+    text: "And the Lord shall guide thee continually, and satisfy thy soul in drought, and make fat thy bones: and thou shalt be like a watered garden, and like a spring of water, whose waters fail not.",
+    book: "Isaiah",
+    chapter: 58,
+    verse: 11,
+    theme: "Trust in the Lord"
   },
   {
     text: "Blessed is the man that trusteth in the Lord, and whose hope the Lord is. For he shall be as a tree planted by the waters, and that spreadeth out her roots by the river, and shall not see when heat cometh, but her leaf shall be green; and shall not be careful in the year of drought, neither shall cease from yielding fruit.",
@@ -492,20 +529,20 @@ const scriptures = [
     theme: "Trust in the Lord"
   },
   {
-    text: "The Lord thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.",
-    book: "Zephaniah",
-    chapter: 3,
-    verse: 17,
-    theme: "Trust in the Lord"
-  },
-  {
     text: "The Lord is good, a strong hold in the day of trouble; and he knoweth them that trust in him.",
     book: "Nahum",
     chapter: 1,
     verse: 7,
     theme: "Trust in the Lord"
   },
-  // ── New Testament ────────────────────────────────────────────────────────────
+  {
+    text: "The Lord thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.",
+    book: "Zephaniah",
+    chapter: 3,
+    verse: 17,
+    theme: "Trust in the Lord"
+  },
+  // ── New Testament ─────────────────────────────────────────────────────────────
   {
     text: "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you: for every one that asketh receiveth; and he that seeketh findeth; and to him that knocketh it shall be opened.",
     book: "Matthew",
@@ -518,6 +555,13 @@ const scriptures = [
     book: "Matthew",
     chapter: 11,
     verse: "28–30",
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "...If ye have faith as a grain of mustard seed...nothing shall be impossible unto you.",
+    book: "Matthew",
+    chapter: 17,
+    verse: 20,
     theme: "Faith in Jesus Christ"
   },
   {
@@ -546,6 +590,13 @@ const scriptures = [
     book: "Romans",
     chapter: 8,
     verse: "38–39",
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "...be ye transformed by the renewing of your mind...",
+    book: "Romans",
+    chapter: 12,
+    verse: 2,
     theme: "Faith in Jesus Christ"
   },
   {
@@ -583,7 +634,7 @@ const scriptures = [
     verse: 7,
     theme: "Trust in the Lord"
   },
-  // ── Book of Mormon ───────────────────────────────────────────────────────────
+  // ── Book of Mormon ────────────────────────────────────────────────────────────
   {
     text: "I will go and do the things which the Lord hath commanded, for I know that the Lord giveth no commandments unto the children of men, save he shall prepare a way for them that they may accomplish the thing which he commandeth them.",
     book: "1 Nephi",
@@ -610,13 +661,6 @@ const scriptures = [
     book: "2 Nephi",
     chapter: 31,
     verse: 20,
-    theme: "Faith in Jesus Christ"
-  },
-  {
-    text: "He doeth not anything save it be for the benefit of the world; for he loveth the world, even that he layeth down his own life that he may draw all men unto him. Wherefore, he commandeth none that they shall not partake of his salvation.",
-    book: "2 Nephi",
-    chapter: 26,
-    verse: 24,
     theme: "Faith in Jesus Christ"
   },
   {
@@ -648,10 +692,10 @@ const scriptures = [
     theme: "Trust in the Lord"
   },
   {
-    text: "Faith is things which are hoped for and not seen; wherefore, dispute not because ye see not, for ye receive no witness until after the trial of your faith.",
-    book: "Ether",
-    chapter: 12,
-    verse: 6,
+    text: "Remember, remember that it is upon the rock of our Redeemer, who is Christ, the Son of God, that ye must build your foundation; that when the devil shall send forth his mighty winds, yea, his shafts in the whirlwind, yea, when all his hail and his mighty storm shall beat upon you, it shall have no power over you to drag you down to the gulf of misery and endless wo, because of the rock upon which ye are built, which is a sure foundation, a foundation whereon if men build they cannot fall.",
+    book: "Helaman",
+    chapter: 5,
+    verse: 12,
     theme: "Faith in Jesus Christ"
   },
   {
@@ -675,14 +719,7 @@ const scriptures = [
     verse: 32,
     theme: "Faith in Jesus Christ"
   },
-  {
-    text: "Remember, remember that it is upon the rock of our Redeemer, who is Christ, the Son of God, that ye must build your foundation; that when the devil shall send forth his mighty winds, yea, his shafts in the whirlwind, yea, when all his hail and his mighty storm shall beat upon you, it shall have no power over you to drag you down to the gulf of misery and endless wo, because of the rock upon which ye are built, which is a sure foundation, a foundation whereon if men build they cannot fall.",
-    book: "Helaman",
-    chapter: 5,
-    verse: 12,
-    theme: "Faith in Jesus Christ"
-  },
-  // ── Doctrine & Covenants ─────────────────────────────────────────────────────
+  // ── Doctrine & Covenants ──────────────────────────────────────────────────────
   {
     text: "Fear not to do good, my sons, for whatsoever ye sow, that shall ye also reap; therefore, if ye sow good ye shall also reap good for your reward.",
     book: "Doctrine & Covenants",
@@ -753,13 +790,59 @@ const scriptures = [
     verse: "7–8",
     theme: "Be of Good Courage"
   },
-  // ── Pearl of Great Price ──────────────────────────────────────────────────────
+  {
+    text: "…know thou, my son, that all these things shall give thee experience, and shall be for thy good… Therefore, hold on thy way… for God shall be with you forever and ever.",
+    book: "Doctrine & Covenants",
+    chapter: 122,
+    verse: "7–9",
+    theme: "Be of Good Courage"
+  },
+  // ── Pearl of Great Price ───────────────────────────────────────────────────────
   {
     text: "Behold my Spirit is upon you, wherefore all thy words will I justify; and the mountains shall flee before you, and the rivers shall turn from their course; thou shalt abide in me, and I in you; therefore walk with me.",
     book: "Moses",
     chapter: 6,
     verse: 34,
     theme: "Be of Good Courage"
+  }
+]; // end libraries.scriptures
+
+// ── Encouraging Prophets library ──────────────────────────────────────────────
+libraries.prophets = [
+  {
+    text: "To have the continuous companionship of the Holy Ghost is the most precious possession we can have in mortality.",
+    author: "Dallin H. Oaks"
+  },
+  {
+    text: "Jesus challenges us to focus on Him, not on the things of the world.",
+    author: "Dallin H. Oaks"
+  },
+  {
+    text: "It is opposition that enables choice and it is the opportunity of making the right choices that leads to the growth that is the purpose of the Father's plan.",
+    author: "Dallin H. Oaks"
+  },
+  {
+    text: "Opposition in the form of difficult circumstances we face in mortality is also part of the plan that furthers our growth in mortality.",
+    author: "Dallin H. Oaks"
+  },
+  {
+    text: "Jesus Christ is the Only Begotten and Beloved Son of God. He is our Creator. He is the Light of the World. He is our Savior from sin and death. This is the most important knowledge on earth, and you can know this for yourself, as I know it for myself. The Holy Ghost, who testifies of the Father and the Son and leads us into truth, has revealed these truths to me, and He will reveal them to you.",
+    author: "Dallin H. Oaks"
+  },
+  {
+    text: "The only true test of greatness, blessedness, joyfulness is how close a life can come to being like the Master, Jesus Christ. He is the right way, the full truth, and the abundant life.",
+    author: "Ezra Taft Benson"
+  }
+];
+
+// ── Jesus Christ library ───────────────────────────────────────────────────────
+libraries.christ = [
+  {
+    text: "I am the way, the truth, and the life: no man cometh unto the Father, but by me.",
+    book: "John",
+    chapter: 14,
+    verse: 6,
+    theme: "Faith in Jesus Christ"
   }
 ];
 
@@ -770,13 +853,7 @@ function getDailyIndex() {
   const diff = now - start;
   const oneDay = 1000 * 60 * 60 * 24;
   const dayOfYear = Math.floor(diff / oneDay);
-  return dayOfYear % scriptures.length;
-}
-
-function formatDate(date) {
-  return date.toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
+  return dayOfYear % libraries.scriptures.length;
 }
 
 function formatRef(s) {
@@ -784,28 +861,39 @@ function formatRef(s) {
 }
 
 // ── State & Render ────────────────────────────────────────────────────────────
-const todayIndex = getDailyIndex();
-let currentIndex = todayIndex;
+let currentLibraryKey = 'scriptures';
+const todayIndex      = getDailyIndex();
+let currentIndex      = todayIndex;
 
-const card          = document.getElementById('card');
-const themeTag      = document.getElementById('themeTag');
-const scriptureText = document.getElementById('scriptureText');
-const referenceShort= document.getElementById('referenceShort');
-const navCounter    = document.getElementById('navCounter');
+const card           = document.getElementById('card');
+const themeTag       = document.getElementById('themeTag');
+const scriptureText  = document.getElementById('scriptureText');
+const referenceShort = document.getElementById('referenceShort');
+const navCounter     = document.getElementById('navCounter');
+
+function activeLib() {
+  return libraries[currentLibraryKey];
+}
 
 function updateContent(index) {
-  const s = scriptures[index];
-  themeTag.textContent       = s.theme;
-  scriptureText.textContent  = s.text;
-  referenceShort.textContent = formatRef(s);
-  navCounter.textContent     = `${index + 1} / ${scriptures.length}`;
+  const s   = activeLib()[index];
+  const len = activeLib().length;
+
+  if (s.author) {
+    // Prophet quote
+    themeTag.textContent       = '';
+    scriptureText.textContent  = s.text;
+    referenceShort.textContent = '\u2014 ' + s.author;
+  } else {
+    // Scripture
+    themeTag.textContent       = '';
+    scriptureText.textContent  = s.text;
+    referenceShort.textContent = formatRef(s);
+  }
+  navCounter.textContent = `${index + 1} / ${len}`;
 }
 
-function render(index) {
-  updateContent(index);
-}
-
-render(currentIndex);
+updateContent(currentIndex);
 
 let flipping = false;
 
@@ -816,25 +904,21 @@ function flipTo(direction) {
   const outClass = direction === 'next' ? 'flip-out-left' : 'flip-out-right';
   const inClass  = direction === 'next' ? 'flip-in-left'  : 'flip-in-right';
 
-  // 1. Rotate card out (edge-on)
   card.classList.add(outClass);
 
   setTimeout(() => {
-    // 2. Snap to opposite edge with no transition, update content
     card.classList.remove(outClass);
     card.classList.add(inClass);
 
+    const len = activeLib().length;
     if (direction === 'next') {
-      currentIndex = (currentIndex + 1) % scriptures.length;
+      currentIndex = (currentIndex + 1) % len;
     } else {
-      currentIndex = (currentIndex - 1 + scriptures.length) % scriptures.length;
+      currentIndex = (currentIndex - 1 + len) % len;
     }
     updateContent(currentIndex);
 
-    // 3. Force reflow so the browser registers the no-transition position
     card.getBoundingClientRect();
-
-    // 4. Remove no-transition class and snap back to flat (animate in)
     card.classList.remove(inClass);
 
     setTimeout(() => { flipping = false; }, 400);
@@ -846,6 +930,18 @@ function goPrev() { flipTo('prev'); }
 
 document.getElementById('prevBtn').addEventListener('click', goPrev);
 document.getElementById('nextBtn').addEventListener('click', goNext);
+
+// ── Category switching ────────────────────────────────────────────────────────
+document.getElementById('categorySelect').addEventListener('change', function () {
+  currentLibraryKey = this.value;
+  currentIndex = (currentLibraryKey === 'scriptures') ? getDailyIndex() : 0;
+
+  // Flip the card in so the switch feels animated
+  card.classList.add('flip-in-left');
+  updateContent(currentIndex);
+  card.getBoundingClientRect();
+  card.classList.remove('flip-in-left');
+});
 
 // ── Swipe support ─────────────────────────────────────────────────────────────
 let touchStartX = 0;
