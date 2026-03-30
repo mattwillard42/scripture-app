@@ -890,6 +890,10 @@ libraries.christ = [
     chapter: 1,
     verse: 4,
     theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Jesus Christ is joy.",
+    author: "Russell M. Nelson"
   }
 ];
 
@@ -940,23 +944,13 @@ libraries.providing = [
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-function getDailyIndex() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now - start;
-  const oneDay = 1000 * 60 * 60 * 24;
-  const dayOfYear = Math.floor(diff / oneDay);
-  return dayOfYear % libraries.scriptures.length;
-}
-
 function formatRef(s) {
   return `${s.book} ${s.chapter}:${s.verse}`;
 }
 
 // ── State & Render ────────────────────────────────────────────────────────────
 let currentLibraryKey = 'scriptures';
-const todayIndex      = getDailyIndex();
-let currentIndex      = todayIndex;
+let currentIndex      = 0;
 
 const card           = document.getElementById('card');
 const themeTag       = document.getElementById('themeTag');
@@ -1027,7 +1021,7 @@ document.getElementById('nextBtn').addEventListener('click', goNext);
 // ── Category switching ────────────────────────────────────────────────────────
 document.getElementById('categorySelect').addEventListener('change', function () {
   currentLibraryKey = this.value;
-  currentIndex = (currentLibraryKey === 'scriptures') ? getDailyIndex() : 0;
+  currentIndex = 0;
 
   // Flip the card in so the switch feels animated
   card.classList.add('flip-in-left');
