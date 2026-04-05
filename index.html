@@ -13,6 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Cinzel:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -338,10 +339,10 @@
       <option value="scriptures_bom">Encouraging Scriptures BOM</option>
       <option value="scriptures_dc">Encouraging Scriptures D&amp;C</option>
       <option value="scriptures_pogp">Encouraging Scriptures PoGP</option>
-      <option value="jesus">Jesus Christ</option>
       <option value="prophets">Encouraging Prophets</option>
       <option value="christ">Doctrine of Jesus Christ</option>
       <option value="providing">Providing in the Lord's Way</option>
+      <option value="share">Share the App</option>
     </select>
     <div class="ornament">
       <div class="ornament-line"></div>
@@ -526,6 +527,22 @@ libraries.scriptures_nt = [
   {
     text: "Throw all your worry on him, because he cares for you.",
     book: "1 Peter", chapter: 5, verse: 7, theme: "Trust in the Lord"
+  },
+  {
+    text: "...I am come that they might have life, and that they might have it more abundantly.",
+    book: "John", chapter: 10, verse: 10, theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "I am the way, the truth, and the life: no man cometh unto the Father, but by me.",
+    book: "John", chapter: 14, verse: 6, theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Then Jesus told his disciples, If anyone would come after me, let him deny himself and take up his cross and follow me. For whoever would save his life will lose it, but whoever loses his life for my sake will find it.",
+    book: "Matthew", chapter: 16, verse: "24–25", theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "If anyone serves me, he must follow me; and where I am, there will my servant be also. If anyone serves me, the Father will honor him.",
+    book: "John", chapter: 12, verse: 26, theme: "Faith in Jesus Christ"
   }
 ];
 
@@ -662,38 +679,6 @@ libraries.prophets = [
   }
 ];
 
-// ── Jesus Christ library ──────────────────────────────────────────────────────
-libraries.jesus = [
-  {
-    text: "...I am come that they might have life, and that they might have it more abundantly.",
-    book: "John",
-    chapter: 10,
-    verse: 10,
-    theme: "Faith in Jesus Christ"
-  },
-  {
-    text: "I am the way, the truth, and the life: no man cometh unto the Father, but by me.",
-    book: "John",
-    chapter: 14,
-    verse: 6,
-    theme: "Faith in Jesus Christ"
-  },
-  {
-    text: "Then Jesus told his disciples, \"If anyone would come after me, let him deny himself and take up his cross and follow me. For whoever would save his life will lose it, but whoever loses his life for my sake will find it.",
-    book: "Matthew",
-    chapter: 16,
-    verse: "24–25",
-    theme: "Faith in Jesus Christ"
-  },
-  {
-    text: "If anyone serves me, he must follow me; and where I am, there will my servant be also. If anyone serves me, the Father will honor him.",
-    book: "John",
-    chapter: 12,
-    verse: 26,
-    theme: "Faith in Jesus Christ"
-  }
-];
-
 // ── Doctrine of Jesus Christ library ─────────────────────────────────────────
 libraries.christ = [
   // ── New Testament ─────────────────────────────────────────────────────────────
@@ -814,6 +799,15 @@ libraries.providing = [
   }
 ];
 
+// ── Share the App ─────────────────────────────────────────────────────────────
+// Paste the URL where your app is hosted so others can scan / open it.
+const APP_SHARE_URL = 'https://mattwillard42.github.io/scripture-app/';
+
+libraries.share = [
+  { type: 'share', subtype: 'qrcode' },
+  { type: 'share', subtype: 'link'   },
+];
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function formatRef(s) {
   return `${s.book} ${s.chapter}:${s.verse}`;
@@ -837,8 +831,63 @@ function updateContent(index) {
   const s   = activeLib()[index];
   const len = activeLib().length;
 
-  if (s.author) {
-    // Prophet quote
+  if (s.type === 'share') {
+    themeTag.textContent       = '';
+    referenceShort.textContent = '';
+
+    if (s.subtype === 'qrcode') {
+      scriptureText.innerHTML =
+        '<div style="display:flex;flex-direction:column;align-items:center;gap:14px;">' +
+          '<div id="qr-canvas"></div>' +
+          '<p style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:0.18em;' +
+             'color:var(--gold);opacity:0.7;text-transform:uppercase;">Scan to open the app</p>' +
+        '</div>';
+      setTimeout(function () {
+        var el = document.getElementById('qr-canvas');
+        if (!el) return;
+        if (APP_SHARE_URL && typeof QRCode !== 'undefined') {
+          new QRCode(el, {
+            text: APP_SHARE_URL,
+            width: 180, height: 180,
+            colorDark:  '#d4b896',
+            colorLight: '#112236',
+          });
+        } else {
+          el.innerHTML =
+            '<p style="font-size:13px;color:var(--sepia-dim);text-align:center;' +
+            'font-style:italic;line-height:1.7;">Set APP_SHARE_URL in the code<br>to generate a QR code here.</p>';
+        }
+      }, 60);
+
+    } else {
+      var url = APP_SHARE_URL || '(Set APP_SHARE_URL in the code)';
+      scriptureText.innerHTML =
+        '<div style="display:flex;flex-direction:column;align-items:center;gap:20px;">' +
+          '<p style="font-family:\'Libre Baskerville\',serif;font-size:15px;color:var(--sepia);' +
+             'word-break:break-all;text-align:center;line-height:1.8;">' + url + '</p>' +
+          '<button id="copyBtn" style="font-family:\'Cinzel\',serif;font-size:11px;' +
+             'letter-spacing:0.18em;text-transform:uppercase;color:var(--sepia-dim);' +
+             'background:none;border:1px solid var(--border);padding:10px 24px;' +
+             'border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent;">' +
+             'Copy Link</button>' +
+        '</div>';
+      document.getElementById('copyBtn').addEventListener('click', function () {
+        if (!APP_SHARE_URL) return;
+        navigator.clipboard.writeText(APP_SHARE_URL).then(function () {
+          var btn = document.getElementById('copyBtn');
+          if (btn) {
+            btn.textContent = 'Copied!';
+            setTimeout(function () {
+              var b = document.getElementById('copyBtn');
+              if (b) b.textContent = 'Copy Link';
+            }, 2000);
+          }
+        });
+      });
+    }
+
+  } else if (s.author) {
+    // Prophet / leader quote
     themeTag.textContent       = '';
     scriptureText.textContent  = s.text;
     referenceShort.textContent = '\u2014 ' + s.author;
