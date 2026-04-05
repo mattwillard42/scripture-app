@@ -333,7 +333,11 @@
 
   <header>
     <select class="category-select" id="categorySelect">
-      <option value="scriptures">Encouraging Scriptures</option>
+      <option value="scriptures_ot">Encouraging Scriptures OT</option>
+      <option value="scriptures_nt">Encouraging Scriptures NT</option>
+      <option value="scriptures_bom">Encouraging Scriptures BOM</option>
+      <option value="scriptures_dc">Encouraging Scriptures D&amp;C</option>
+      <option value="scriptures_pogp">Encouraging Scriptures PoGP</option>
       <option value="jesus">Jesus Christ</option>
       <option value="prophets">Encouraging Prophets</option>
       <option value="christ">Doctrine of Jesus Christ</option>
@@ -375,419 +379,260 @@
 // ── Libraries ─────────────────────────────────────────────────────────────────
 const libraries = {};
 
-libraries.scriptures = [
-  // ── Old Testament ─────────────────────────────────────────────────────────────
+libraries.scriptures_ot = [
   {
     text: "Be strong and courageous. Don't fear or tremble before them, because the Lord your God will be the one who keeps on walking with you—he won't leave you or abandon you.",
-    book: "Deuteronomy",
-    chapter: 31,
-    verse: 6,
-    theme: "Do Not Fear"
+    book: "Deuteronomy", chapter: 31, verse: 6, theme: "Do Not Fear"
   },
   {
     text: "...the Lord is the one who will keep on walking in front of you. He'll be with you and won't leave you or abandon you, so never be afraid and never be dismayed.",
-    book: "Deuteronomy",
-    chapter: 31,
-    verse: 8,
-    theme: "Do Not Fear"
+    book: "Deuteronomy", chapter: 31, verse: 8, theme: "Do Not Fear"
   },
   {
     text: "Be strong and courageous. Don't be fearful or discouraged, because the Lord your God is with you wherever you go.",
-    book: "Joshua",
-    chapter: 1,
-    verse: 9,
-    theme: "Be of Good Courage"
+    book: "Joshua", chapter: 1, verse: 9, theme: "Be of Good Courage"
   },
   {
     text: "Be strong and courageous, and get to work. Never be afraid or discouraged, for the Lord God, my God, is with you. He will not fail you nor will he abandon you...",
-    book: "1 Chronicles",
-    chapter: 28,
-    verse: 20,
-    theme: "Be of Good Courage"
+    book: "1 Chronicles", chapter: 28, verse: 20, theme: "Be of Good Courage"
   },
   {
     text: "The Lord is my light and my salvation; whom shall I fear? the Lord is the strength of my life; of whom shall I be afraid?",
-    book: "Psalms",
-    chapter: 27,
-    verse: 1,
-    theme: "Do Not Fear"
+    book: "Psalms", chapter: 27, verse: 1, theme: "Do Not Fear"
   },
   {
     text: "Wait on the Lord. Be courageous, and he will strengthen your heart. Wait on the Lord!",
-    book: "Psalms",
-    chapter: 27,
-    verse: 14,
-    theme: "Be of Good Courage"
+    book: "Psalms", chapter: 27, verse: 14, theme: "Be of Good Courage"
   },
   {
     text: "The Lord is my strength and my shield; my heart trusts in him, and I received help. My heart rejoices, and I give thanks to him with my song.",
-    book: "Psalms",
-    chapter: 28,
-    verse: 7,
-    theme: "Trust in the Lord"
+    book: "Psalms", chapter: 28, verse: 7, theme: "Trust in the Lord"
   },
   {
     text: "Be strong, and let your heart be courageous, all you who put your hope in the Lord.",
-    book: "Psalms",
-    chapter: 31,
-    verse: 24,
-    theme: "Be of Good Courage"
+    book: "Psalms", chapter: 31, verse: 24, theme: "Be of Good Courage"
   },
   {
     text: "I sought the Lord, and he heard me, and delivered me from all my fears.",
-    book: "Psalms",
-    chapter: 34,
-    verse: 4,
-    theme: "Trust in the Lord"
+    book: "Psalms", chapter: 34, verse: 4, theme: "Trust in the Lord"
   },
   {
     text: "Trust in the Lord and do good. Then you will live safely in the land and prosper. Take delight in the Lord, and he will give you your heart's desires. Commit everything you do to the Lord. Trust him, and he will help you.",
-    book: "Psalms",
-    chapter: 37,
-    verse: "3–5",
-    theme: "Trust in the Lord"
+    book: "Psalms", chapter: 37, verse: "3–5", theme: "Trust in the Lord"
   },
   {
     text: "God is our refuge and strength, always ready to help in times of trouble.",
-    book: "Psalms",
-    chapter: 46,
-    verse: 1,
-    theme: "Trust in the Lord"
+    book: "Psalms", chapter: 46, verse: 1, theme: "Trust in the Lord"
   },
   {
     text: "He will cover you with his feathers. He will shelter you with his wings. His faithful promises are your armor and protection.",
-    book: "Psalms",
-    chapter: 91,
-    verse: 4,
-    theme: "Trust in the Lord"
+    book: "Psalms", chapter: 91, verse: 4, theme: "Trust in the Lord"
   },
   {
     text: "This is the day which the Lord hath made; we will rejoice and be glad in it.",
-    book: "Psalms",
-    chapter: 118,
-    verse: 24,
-    theme: "Trust in the Lord"
+    book: "Psalms", chapter: 118, verse: 24, theme: "Trust in the Lord"
+  },
+  {
+    text: "From where does my help come? My help comes from the Lord, who made heaven and earth.",
+    book: "Psalms", chapter: 121, verse: "1–2", theme: "Trust in the Lord"
   },
   {
     text: "Trust in the Lord with all your heart, And lean not on your own understanding; In all your ways acknowledge Him, And He shall direct your paths.",
-    book: "Proverbs",
-    chapter: 3,
-    verse: "5–6",
-    theme: "Trust in the Lord"
+    book: "Proverbs", chapter: 3, verse: "5–6", theme: "Trust in the Lord"
   },
   {
     text: "Trust ye in the Lord for ever: for in the Lord Jehovah is everlasting strength.",
-    book: "Isaiah",
-    chapter: 26,
-    verse: 4,
-    theme: "Trust in the Lord"
+    book: "Isaiah", chapter: 26, verse: 4, theme: "Trust in the Lord"
   },
   {
     text: "But they that wait upon the Lord shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.",
-    book: "Isaiah",
-    chapter: 40,
-    verse: 31,
-    theme: "Trust in the Lord"
+    book: "Isaiah", chapter: 40, verse: 31, theme: "Trust in the Lord"
   },
   {
     text: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",
-    book: "Isaiah",
-    chapter: 41,
-    verse: 10,
-    theme: "Do Not Fear"
+    book: "Isaiah", chapter: 41, verse: 10, theme: "Do Not Fear"
   },
   {
     text: "Fear not: for I am with thee.",
-    book: "Isaiah",
-    chapter: 43,
-    verse: 5,
-    theme: "Do Not Fear"
+    book: "Isaiah", chapter: 43, verse: 5, theme: "Do Not Fear"
   },
   {
     text: "And the Lord shall guide thee continually, and satisfy thy soul in drought, and make fat thy bones: and thou shalt be like a watered garden, and like a spring of water, whose waters fail not.",
-    book: "Isaiah",
-    chapter: 58,
-    verse: 11,
-    theme: "Trust in the Lord"
+    book: "Isaiah", chapter: 58, verse: 11, theme: "Trust in the Lord"
   },
   {
     text: "Blessed is the person who trusts in the Lord, making the Lord his trust. He will be like a tree planted by the water that sends out its roots by a stream. He won't fear when the heat comes, and his leaves will be green. In a year of drought he won't be concerned, nor will he stop producing fruit.",
-    book: "Jeremiah",
-    chapter: 17,
-    verse: "7–8",
-    theme: "Trust in the Lord"
+    book: "Jeremiah", chapter: 17, verse: "7–8", theme: "Trust in the Lord"
   },
   {
     text: "The Lord is good, a strong hold in the day of trouble; and he knoweth them that trust in him.",
-    book: "Nahum",
-    chapter: 1,
-    verse: 7,
-    theme: "Trust in the Lord"
+    book: "Nahum", chapter: 1, verse: 7, theme: "Trust in the Lord"
   },
   {
-    text: "The LORD your God among you is powerful—he will save and he will take joyful delight in you. In his love he will renew you with his love; he will celebrate with singing because of you.",
-    book: "Zephaniah",
-    chapter: 3,
-    verse: 17,
-    theme: "Trust in the Lord"
-  },
-  // ── New Testament ─────────────────────────────────────────────────────────────
+    text: "The Lord your God among you is powerful—he will save and he will take joyful delight in you. In his love he will renew you with his love",
+    book: "Zephaniah", chapter: 3, verse: 17, theme: "Trust in the Lord"
+  }
+];
+
+libraries.scriptures_nt = [
   {
     text: "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you: for every one that asketh receiveth; and he that seeketh findeth; and to him that knocketh it shall be opened.",
-    book: "Matthew",
-    chapter: 7,
-    verse: "7–8",
-    theme: "Faith in Jesus Christ"
+    book: "Matthew", chapter: 7, verse: "7–8", theme: "Faith in Jesus Christ"
   },
   {
     text: "Come unto me, all ye that labour and are heavy laden, and I will give you rest. Take my yoke upon you, and learn of me; for I am meek and lowly in heart: and ye shall find rest unto your souls. For my yoke is easy, and my burden is light.",
-    book: "Matthew",
-    chapter: 11,
-    verse: "28–30",
-    theme: "Faith in Jesus Christ"
+    book: "Matthew", chapter: 11, verse: "28–30", theme: "Faith in Jesus Christ"
   },
   {
     text: "...If ye have faith as a grain of mustard seed...nothing shall be impossible unto you.",
-    book: "Matthew",
-    chapter: 17,
-    verse: 20,
-    theme: "Faith in Jesus Christ"
+    book: "Matthew", chapter: 17, verse: 20, theme: "Faith in Jesus Christ"
   },
   {
     text: "Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",
-    book: "John",
-    chapter: 14,
-    verse: 27,
-    theme: "Do Not Fear"
+    book: "John", chapter: 14, verse: 27, theme: "Do Not Fear"
+  },
+  {
+    text: "I am the true vine, and my Father is the vinedresser. Every branch in me that does not bear fruit he takes away, and every branch that does bear fruit he prunes, that it may bear more fruit. Abide in me, and I in you. As the branch cannot bear fruit by itself, unless it abides in the vine, neither can you, unless you abide in me.",
+    book: "John", chapter: 15, verse: "1–2, 4", theme: "Faith in Jesus Christ"
   },
   {
     text: "These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world.",
-    book: "John",
-    chapter: 16,
-    verse: 33,
-    theme: "Be of Good Courage"
+    book: "John", chapter: 16, verse: 33, theme: "Be of Good Courage"
   },
   {
     text: "If God be for us, who can be against us?",
-    book: "Romans",
-    chapter: 8,
-    verse: 31,
-    theme: "Trust in the Lord"
+    book: "Romans", chapter: 8, verse: 31, theme: "Trust in the Lord"
   },
   {
     text: "...be ye transformed by the renewing of your mind...",
-    book: "Romans",
-    chapter: 12,
-    verse: 2,
-    theme: "Faith in Jesus Christ"
+    book: "Romans", chapter: 12, verse: 2, theme: "Faith in Jesus Christ"
   },
   {
     text: "And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",
-    book: "Philippians",
-    chapter: 4,
-    verse: 7,
-    theme: "Trust in the Lord"
+    book: "Philippians", chapter: 4, verse: 7, theme: "Trust in the Lord"
   },
   {
     text: "I can do all things through Christ which strengtheneth me.",
-    book: "Philippians",
-    chapter: 4,
-    verse: 13,
-    theme: "Faith in Jesus Christ"
+    book: "Philippians", chapter: 4, verse: 13, theme: "Faith in Jesus Christ"
   },
   {
     text: "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",
-    book: "2 Timothy",
-    chapter: 1,
-    verse: 7,
-    theme: "Do Not Fear"
+    book: "2 Timothy", chapter: 1, verse: 7, theme: "Do Not Fear"
   },
   {
     text: "So that we may boldly say, The Lord is my helper, and I will not fear what man shall do unto me.",
-    book: "Hebrews",
-    chapter: 13,
-    verse: 6,
-    theme: "Do Not Fear"
+    book: "Hebrews", chapter: 13, verse: 6, theme: "Do Not Fear"
   },
   {
     text: "Throw all your worry on him, because he cares for you.",
-    book: "1 Peter",
-    chapter: 5,
-    verse: 7,
-    theme: "Trust in the Lord"
-  },
-  // ── Book of Mormon ────────────────────────────────────────────────────────────
+    book: "1 Peter", chapter: 5, verse: 7, theme: "Trust in the Lord"
+  }
+];
+
+libraries.scriptures_bom = [
   {
     text: "I will go and do the things which the Lord hath commanded, for I know that the Lord giveth no commandments unto the children of men, save he shall prepare a way for them that they may accomplish the thing which he commandeth them.",
-    book: "1 Nephi",
-    chapter: 3,
-    verse: 7,
-    theme: "Faith in Jesus Christ"
+    book: "1 Nephi", chapter: 3, verse: 7, theme: "Faith in Jesus Christ"
   },
   {
     text: "Nevertheless, I know in whom I have trusted. My God hath been my support; he hath led me through mine afflictions in the wilderness; and he hath preserved me upon the waters of the great deep.",
-    book: "2 Nephi",
-    chapter: 4,
-    verse: "19–20",
-    theme: "Trust in the Lord"
+    book: "2 Nephi", chapter: 4, verse: "19–20", theme: "Trust in the Lord"
   },
   {
     text: "O Lord, I have trusted in thee, and I will trust in thee forever. I will not put my trust in the arm of flesh; for I know that cursed is he that putteth his trust in the arm of flesh. Yea, cursed is he that putteth his trust in man or maketh flesh his arm.",
-    book: "2 Nephi",
-    chapter: 4,
-    verse: 34,
-    theme: "Trust in the Lord"
+    book: "2 Nephi", chapter: 4, verse: 34, theme: "Trust in the Lord"
   },
   {
     text: "Wherefore, ye must press forward with a steadfastness in Christ, having a perfect brightness of hope, and a love of God and of all men. Wherefore, if ye shall press forward, feasting upon the word of Christ, and endure to the end, behold, thus saith the Father: Ye shall have eternal life.",
-    book: "2 Nephi",
-    chapter: 31,
-    verse: 20,
-    theme: "Faith in Jesus Christ"
+    book: "2 Nephi", chapter: 31, verse: 20, theme: "Faith in Jesus Christ"
   },
   {
     text: "Believe in God; believe that he is, and that he created all things, both in heaven and in earth; believe that he has all wisdom, and all power, both in heaven and in earth; believe that man doth not comprehend all the things which the Lord can comprehend.",
-    book: "Mosiah",
-    chapter: 4,
-    verse: 9,
-    theme: "Faith in Jesus Christ"
+    book: "Mosiah", chapter: 4, verse: 9, theme: "Faith in Jesus Christ"
   },
   {
     text: "Yea, I know that I am nothing; as to my strength I am weak; therefore I will not boast of myself, but I will boast of my God, for in his strength I can do all things; yea, behold, many mighty miracles we have wrought in this land, for which we will praise his name forever.",
-    book: "Alma",
-    chapter: 26,
-    verse: 12,
-    theme: "Faith in Jesus Christ"
+    book: "Alma", chapter: 26, verse: 12, theme: "Faith in Jesus Christ"
   },
   {
     text: "I do know that whosoever shall put their trust in God shall be supported in their trials, and their troubles, and their afflictions, and shall be lifted up at the last day.",
-    book: "Alma",
-    chapter: 36,
-    verse: 3,
-    theme: "Trust in the Lord"
+    book: "Alma", chapter: 36, verse: 3, theme: "Trust in the Lord"
   },
   {
     text: "Counsel with the Lord in all thy doings, and he will direct thee for good; yea, when thou liest down at night lie down unto the Lord, that he may watch over you in your sleep; and when thou risest in the morning let thy heart be full of thanks unto God; and if ye do these things, ye shall be lifted up at the last day.",
-    book: "Alma",
-    chapter: 37,
-    verse: 37,
-    theme: "Trust in the Lord"
+    book: "Alma", chapter: 37, verse: 37, theme: "Trust in the Lord"
   },
   {
     text: "Remember, remember that it is upon the rock of our Redeemer, who is Christ, the Son of God, that ye must build your foundation; that when the devil shall send forth his mighty winds, yea, his shafts in the whirlwind, yea, when all his hail and his mighty storm shall beat upon you, it shall have no power over you to drag you down to the gulf of misery and endless wo, because of the rock upon which ye are built, which is a sure foundation, a foundation whereon if men build they cannot fall.",
-    book: "Helaman",
-    chapter: 5,
-    verse: 12,
-    theme: "Faith in Jesus Christ"
+    book: "Helaman", chapter: 5, verse: 12, theme: "Faith in Jesus Christ"
   },
   {
     text: "And if men come unto me I will show unto them their weakness. I give unto men weakness that they may be humble; and my grace is sufficient for all men that humble themselves before me; for if they humble themselves before me, and have faith in me, then will I make weak things become strong unto them.",
-    book: "Ether",
-    chapter: 12,
-    verse: 27,
-    theme: "Faith in Jesus Christ"
+    book: "Ether", chapter: 12, verse: 27, theme: "Faith in Jesus Christ"
   },
   {
     text: "And Christ hath said: If ye will have faith in me ye shall have power to do whatsoever thing is expedient in me.",
-    book: "Moroni",
-    chapter: 7,
-    verse: 33,
-    theme: "Faith in Jesus Christ"
+    book: "Moroni", chapter: 7, verse: 33, theme: "Faith in Jesus Christ"
   },
   {
     text: "Yea, come unto Christ, and be perfected in him, and deny yourselves of all ungodliness; and if ye shall deny yourselves of all ungodliness, and love God with all your might, mind and strength, then is his grace sufficient for you, that by his grace ye may be perfect in Christ; and if by the grace of God ye are perfect in Christ, ye can in nowise deny the power of God.",
-    book: "Moroni",
-    chapter: 10,
-    verse: 32,
-    theme: "Faith in Jesus Christ"
-  },
-  // ── Doctrine & Covenants ──────────────────────────────────────────────────────
+    book: "Moroni", chapter: 10, verse: 32, theme: "Faith in Jesus Christ"
+  }
+];
+
+libraries.scriptures_dc = [
   {
     text: "Fear not to do good, my sons, for whatsoever ye sow, that shall ye also reap; therefore, if ye sow good ye shall also reap good for your reward.",
-    book: "D&C",
-    chapter: 6,
-    verse: 33,
-    theme: "Do Not Fear"
+    book: "D&C", chapter: 6, verse: 33, theme: "Do Not Fear"
   },
   {
     text: "Look unto me in every thought; doubt not, fear not.",
-    book: "D&C",
-    chapter: 6,
-    verse: 36,
-    theme: "Do Not Fear"
+    book: "D&C", chapter: 6, verse: 36, theme: "Do Not Fear"
   },
   {
     text: "Fear not, little children, for you are mine, and I have overcome the world, and you are of them that my Father hath given me.",
-    book: "D&C",
-    chapter: 50,
-    verse: 41,
-    theme: "Do Not Fear"
+    book: "D&C", chapter: 50, verse: 41, theme: "Do Not Fear"
   },
   {
     text: "And now, verily I say unto you, and what I say unto one I say unto all, be of good cheer, little children; for I am in your midst, and I have not forsaken you.",
-    book: "D&C",
-    chapter: 61,
-    verse: 36,
-    theme: "Be of Good Courage"
+    book: "D&C", chapter: 61, verse: 36, theme: "Be of Good Courage"
   },
   {
     text: "Wherefore, be of good cheer, and do not fear, for I the Lord am with you, and will stand by you; and ye shall bear record of me, even Jesus Christ, that I am the Son of the living God, that I was, that I am, and that I am to come.",
-    book: "D&C",
-    chapter: 68,
-    verse: 6,
-    theme: "Do Not Fear"
+    book: "D&C", chapter: 68, verse: 6, theme: "Do Not Fear"
   },
   {
     text: "And ye cannot bear all things now; nevertheless, be of good cheer, for I will lead you along. The kingdom is yours and the blessings thereof are yours, and the riches of eternity are yours.",
-    book: "D&C",
-    chapter: 78,
-    verse: 18,
-    theme: "Be of Good Courage"
+    book: "D&C", chapter: 78, verse: 18, theme: "Be of Good Courage"
   },
   {
     text: "...for I will go before your face. I will be on your right hand and on your left, and my Spirit shall be in your hearts, and mine angels round about you, to bear you up.",
-    book: "D&C",
-    chapter: 84,
-    verse: 88,
-    theme: "Trust in the Lord"
+    book: "D&C", chapter: 84, verse: 88, theme: "Trust in the Lord"
   },
   {
     text: "Verily I say unto you my friends, fear not, let your hearts be comforted; yea, rejoice evermore, and in everything give thanks.",
-    book: "D&C",
-    chapter: 98,
-    verse: 1,
-    theme: "Do Not Fear"
+    book: "D&C", chapter: 98, verse: 1, theme: "Do Not Fear"
   },
   {
     text: "Wherefore, fear not even unto death; for in this world your joy is not full, but in me your joy is full.",
-    book: "D&C",
-    chapter: 101,
-    verse: 36,
-    theme: "Do Not Fear"
+    book: "D&C", chapter: 101, verse: 36, theme: "Do Not Fear"
   },
   {
     text: "My son, peace be unto thy soul; thine adversity and thine afflictions shall be but a small moment; and then, if thou endure it well, God shall exalt thee on high; thou shalt triumph over all thy foes.",
-    book: "D&C",
-    chapter: 121,
-    verse: "7–8",
-    theme: "Be of Good Courage"
+    book: "D&C", chapter: 121, verse: "7–8", theme: "Be of Good Courage"
   },
   {
     text: "…know thou, my son, that all these things shall give thee experience, and shall be for thy good… Therefore, hold on thy way… for God shall be with you forever and ever.",
-    book: "D&C",
-    chapter: 122,
-    verse: "7–9",
-    theme: "Be of Good Courage"
-  },
-  // ── Pearl of Great Price ───────────────────────────────────────────────────────
+    book: "D&C", chapter: 122, verse: "7–9", theme: "Be of Good Courage"
+  }
+];
+
+libraries.scriptures_pogp = [
   {
     text: "Behold my Spirit is upon you...and thou shalt abide in me, and I in you; therefore walk with me.",
-    book: "Moses",
-    chapter: 6,
-    verse: 34,
-    theme: "Be of Good Courage"
+    book: "Moses", chapter: 6, verse: 34, theme: "Be of Good Courage"
   }
-]; // end libraries.scriptures
+];
 
 // ── Encouraging Prophets library ──────────────────────────────────────────────
 libraries.prophets = [
@@ -831,6 +676,20 @@ libraries.jesus = [
     book: "John",
     chapter: 14,
     verse: 6,
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "Then Jesus told his disciples, \"If anyone would come after me, let him deny himself and take up his cross and follow me. For whoever would save his life will lose it, but whoever loses his life for my sake will find it.",
+    book: "Matthew",
+    chapter: 16,
+    verse: "24–25",
+    theme: "Faith in Jesus Christ"
+  },
+  {
+    text: "If anyone serves me, he must follow me; and where I am, there will my servant be also. If anyone serves me, the Father will honor him.",
+    book: "John",
+    chapter: 12,
+    verse: 26,
     theme: "Faith in Jesus Christ"
   }
 ];
@@ -961,7 +820,7 @@ function formatRef(s) {
 }
 
 // ── State & Render ────────────────────────────────────────────────────────────
-let currentLibraryKey = 'scriptures';
+let currentLibraryKey = 'scriptures_ot';
 let currentIndex      = 0;
 
 const card           = document.getElementById('card');
