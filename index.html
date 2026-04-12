@@ -212,6 +212,7 @@
       font-style: normal;
       font-weight: 400;
       letter-spacing: 0.01em;
+      white-space: pre-line;
     }
 
 
@@ -288,7 +289,7 @@
       border-top: 1px solid var(--border);
     }
 
-    .feedback-btn {
+    .share-btn {
       background: none;
       border: 1px solid var(--border);
       color: var(--sepia-dim);
@@ -299,15 +300,49 @@
       padding: 10px 28px;
       border-radius: 999px;
       cursor: pointer;
-      text-decoration: none;
       display: inline-block;
       transition: border-color 0.2s, color 0.2s;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .feedback-btn:active {
+    .share-btn:active {
       border-color: var(--gold-dim);
       color: var(--gold);
+    }
+
+    /* ── Share QR Modal ──────────────────────────── */
+    .share-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 27, 42, 0.92);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .share-modal.open {
+      display: flex;
+    }
+
+    .share-modal-label {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+
+    .share-modal-dismiss {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--sepia-faint);
+      text-transform: uppercase;
+      margin-top: 8px;
     }
 
     /* ── Card flip transition ────────────────────── */
@@ -446,7 +481,6 @@
         <option value="teaching">Teaching By the Spirit</option>
         <option value="becky_scriptures">Becky's Favorite Scriptures</option>
         <option value="becky_quotes">Becky's Favorite Quotes</option>
-        <option value="share">Share the App</option>
       </select>
     </div>
     <button class="begin-btn" id="beginBtn">Begin</button>
@@ -467,7 +501,6 @@
       <option value="teaching">Teaching By the Spirit</option>
       <option value="becky_scriptures">Becky's Favorite Scriptures</option>
       <option value="becky_quotes">Becky's Favorite Quotes</option>
-      <option value="share">Share the App</option>
     </select>
     <div class="ornament">
       <div class="ornament-line"></div>
@@ -496,10 +529,17 @@
   </main>
 
   <footer>
-    <a class="feedback-btn" href="sms:+18016431733">Feedback</a>
+    <button class="share-btn" id="shareAppBtn">Share App</button>
   </footer>
 
   </div><!-- /#studyView -->
+
+  <!-- Share QR Modal -->
+  <div class="share-modal" id="shareModal">
+    <div id="share-qr-canvas"></div>
+    <p class="share-modal-label">Scan to open the app</p>
+    <p class="share-modal-dismiss">Tap anywhere to close</p>
+  </div>
 
 </div>
 
@@ -962,10 +1002,6 @@ libraries.teaching = [
   },
 ];
 
-libraries.share = [
-  { type: 'share', subtype: 'qrcode' },
-  { type: 'share', subtype: 'link'   },
-];
 
 // ── Becky's Favorite Scriptures ───────────────────────────────────────────────
 libraries.becky_scriptures = [
@@ -1033,6 +1069,26 @@ libraries.becky_quotes = [
     text: "When someone asked me about keeping covenants and walking the covenant path she replied \u201cSimple, it depends on what degree of relationship you want to experience with Jesus Christ.\u201d",
     author: "Emily Bell Freeman"
   },
+  {
+    text: "You can do hard with Jesus or you can do hard alone. That is your choice. But when you do hard with Jesus Christ, the hard becomes holy.",
+    author: "Camille Johnson"
+  },
+  {
+    text: "The way you think about who you really are affects almost every decision you will ever make.",
+    author: "Russell M. Nelson"
+  },
+  {
+    text: "Five Temple Covenants:\n1. Law of Obedience \u2014 Keep Heavenly Father\u2019s commandments\n2. Law of Sacrifice \u2014 Sacrifice and consecrate your life to God\n3. Law of the Gospel \u2014 Live the gospel of Jesus Christ\n4. Law of Chastity \u2014 Maintain sexual purity\n5. Law of Consecration \u2014 Dedicate your time and talents to the Lord",
+    author: "Temple Covenants"
+  },
+  {
+    text: "Christ\u2019s grace is not the light at the end of the tunnel, but the light that moves us through the tunnel.",
+    author: "Brad Wilcox"
+  },
+  {
+    text: "The unity we seek is not to have everyone see things the same way; it\u2019s to have everyone look in the same direction \u2014 toward Jesus Christ.",
+    author: "Dieter F. Uchtdorf"
+  },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -1058,62 +1114,7 @@ function updateContent(index) {
   const s   = activeLib()[index];
   const len = activeLib().length;
 
-  if (s.type === 'share') {
-    themeTag.textContent       = '';
-    referenceShort.textContent = '';
-
-    if (s.subtype === 'qrcode') {
-      scriptureText.innerHTML =
-        '<div style="display:flex;flex-direction:column;align-items:center;gap:14px;">' +
-          '<div id="qr-canvas"></div>' +
-          '<p style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:0.18em;' +
-             'color:var(--gold);opacity:0.7;text-transform:uppercase;">Scan to open the app</p>' +
-        '</div>';
-      setTimeout(function () {
-        var el = document.getElementById('qr-canvas');
-        if (!el) return;
-        if (APP_SHARE_URL && typeof QRCode !== 'undefined') {
-          new QRCode(el, {
-            text: APP_SHARE_URL,
-            width: 180, height: 180,
-            colorDark:  '#d4b896',
-            colorLight: '#112236',
-          });
-        } else {
-          el.innerHTML =
-            '<p style="font-size:13px;color:var(--sepia-dim);text-align:center;' +
-            'font-style:italic;line-height:1.7;">Set APP_SHARE_URL in the code<br>to generate a QR code here.</p>';
-        }
-      }, 60);
-
-    } else {
-      var url = APP_SHARE_URL || '(Set APP_SHARE_URL in the code)';
-      scriptureText.innerHTML =
-        '<div style="display:flex;flex-direction:column;align-items:center;gap:20px;">' +
-          '<p style="font-family:\'Libre Baskerville\',serif;font-size:15px;color:var(--sepia);' +
-             'word-break:break-all;text-align:center;line-height:1.8;">' + url + '</p>' +
-          '<button id="copyBtn" style="font-family:\'Cinzel\',serif;font-size:11px;' +
-             'letter-spacing:0.18em;text-transform:uppercase;color:var(--sepia-dim);' +
-             'background:none;border:1px solid var(--border);padding:10px 24px;' +
-             'border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent;">' +
-             'Copy Link</button>' +
-        '</div>';
-      document.getElementById('copyBtn').addEventListener('click', function () {
-        if (!APP_SHARE_URL) return;
-        navigator.clipboard.writeText(APP_SHARE_URL).then(function () {
-          var btn = document.getElementById('copyBtn');
-          if (btn) {
-            btn.textContent = 'Copied!';
-            setTimeout(function () {
-              var b = document.getElementById('copyBtn');
-              if (b) b.textContent = 'Copy Link';
-            }, 2000);
-          }
-        });
-      });
-    }
-
-  } else if (s.author) {
+  if (s.author) {
     // Prophet / leader quote
     themeTag.textContent       = '';
     scriptureText.textContent  = s.text;
@@ -1193,6 +1194,30 @@ document.getElementById('card').addEventListener('touchend', e => {
     dx < 0 ? goNext() : goPrev();
   }
 }, { passive: true });
+
+// ── Share App button ──────────────────────────────────────────────────────────
+(function () {
+  var modal     = document.getElementById('shareModal');
+  var qrEl      = document.getElementById('share-qr-canvas');
+  var qrCreated = false;
+
+  document.getElementById('shareAppBtn').addEventListener('click', function () {
+    if (!qrCreated && APP_SHARE_URL && typeof QRCode !== 'undefined') {
+      new QRCode(qrEl, {
+        text: APP_SHARE_URL,
+        width: 200, height: 200,
+        colorDark:  '#d4b896',
+        colorLight: '#112236',
+      });
+      qrCreated = true;
+    }
+    modal.classList.add('open');
+  });
+
+  modal.addEventListener('click', function () {
+    modal.classList.remove('open');
+  });
+})();
 
 // ── Landing → Study navigation ────────────────────────────────────────────────
 document.getElementById('beginBtn').addEventListener('click', function () {
