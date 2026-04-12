@@ -484,6 +484,7 @@
       </select>
     </div>
     <button class="begin-btn" id="beginBtn">Begin</button>
+    <button class="share-btn" id="shareAppBtnLanding" style="margin-top:16px;">Share App</button>
   </div>
 
   <div id="studyView">
@@ -1038,7 +1039,7 @@ libraries.becky_scriptures = [
     book: "D&C", chapter: 112, verse: 10
   },
   {
-    text: "Let us cheerfully do all things that lie in our power.",
+    text: "Let us cheerfully do all things that lie in our power; and then may we stand still, with the utmost assurance, to see the salvation of God, and for his arm to be revealed.",
     book: "D&C", chapter: 123, verse: 17
   },
   {
@@ -1201,7 +1202,7 @@ document.getElementById('card').addEventListener('touchend', e => {
   var qrEl      = document.getElementById('share-qr-canvas');
   var qrCreated = false;
 
-  document.getElementById('shareAppBtn').addEventListener('click', function () {
+  function openShareModal() {
     if (!qrCreated && APP_SHARE_URL && typeof QRCode !== 'undefined') {
       new QRCode(qrEl, {
         text: APP_SHARE_URL,
@@ -1212,7 +1213,10 @@ document.getElementById('card').addEventListener('touchend', e => {
       qrCreated = true;
     }
     modal.classList.add('open');
-  });
+  }
+
+  document.getElementById('shareAppBtn').addEventListener('click', openShareModal);
+  document.getElementById('shareAppBtnLanding').addEventListener('click', openShareModal);
 
   modal.addEventListener('click', function () {
     modal.classList.remove('open');
